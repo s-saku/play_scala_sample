@@ -20,3 +20,5 @@ GET     /session                    controllers.HomeController.session(name: Opt
 
 # slickサンプル
 GET     /slick                      controllers.SlickController.index()
+GET     /slick/add                  controllers.SlickController.add()
+POST    /slick/create               controllers.SlickController.create()

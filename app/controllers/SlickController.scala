@@ -30,4 +30,26 @@ class SlickController @Inject() (repository: PersonRepository, cc: MessagesContr
     }
   }
 
+  def add() = Action { implicit request =>
+    Ok(
+      views.html.add(
+        "フォームを記入してください。",
+        Person.personForm
+      )
+    )
+  }
+
+  def create() = Action.async { implicit request =>
+    Person.personForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.add("error", errorForm)))
+      },
+      person => {
+        repository.create(person.name, person.mail, person.tel).map { _ =>
+          Redirect(routes.SlickController.index)
+        }
+      }
+    )
+  }
+
 }
