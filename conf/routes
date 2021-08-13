@@ -22,3 +22,4 @@ GET     /session                    controllers.HomeController.session(name: Opt
 GET     /slick                      controllers.SlickController.index()
 GET     /slick/add                  controllers.SlickController.add()
 POST    /slick/create               controllers.SlickController.create()
+GET     /slick/show/:id             controllers.SlickController.show(id: Int)
