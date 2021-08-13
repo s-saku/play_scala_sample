@@ -1,0 +1,10 @@
+@(message: String, data:Seq[models.Person])(implicit request:MessagesRequestHeader)
+
+@main("Slick index page", "Hello", "copylight 2021") {
+  <h1>@Html(message)</h1>
+  <ul>
+    @for(item<-data){
+      <li>@item.id: @item.name [@item.mail, @item.tel]</li>
+    }
+  </ul>
+}
