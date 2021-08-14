@@ -63,4 +63,72 @@ class SlickController @Inject() (repository: PersonRepository, cc: MessagesContr
     }
   }
 
+  def edit(id: Int) = Action.async { implicit request =>
+    repository.get(id).map { person =>
+      val fdata: Form[PersonForm] = Person.personForm.fill(
+        PersonForm(person.name, person.mail, person.tel)
+      )
+      Ok(views.html.edit("Edit Person.", fdata, id))
+    }
+  }
+
+  def update(id: Int) = Action.async { implicit request =>
+    Person.personForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.edit("error", errorForm, id)))
+      },
+      person => {
+        repository.update(id, person.name, person.mail, person.tel).map { _ =>
+          Redirect(routes.SlickController.index)
+        }
+      }
+    )
+  }
+
+  def delete(id: Int) = Action.async { implicit request =>
+    repository.get(id).map { person =>
+      Ok(
+        views.html.delete(
+          "Delete person",
+          person,
+          id
+        )
+      )
+    }
+  }
+
+  def remove(id: Int) = Action.async { implicit request =>
+    repository.delete(id).map { _ =>
+      Redirect(routes.SlickController.index)
+    }
+  }
+
+  def find() = Action { implicit request =>
+    Ok(
+      views.html.find(
+        "Find Data.",
+        Person.personFind,
+        Seq[Person]()
+      )
+    )
+  }
+
+  def search() = Action.async { implicit request =>
+    Person.personFind.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.find("error", errorForm, Seq[Person]())))
+      },
+      find => {
+        repository.find(find.query).map { result =>
+          Ok(
+            views.html.find(
+              "Find: " + find.query,
+              Person.personFind,
+              result
+            )
+          )
+        }
+      }
+    )
+  }
 }

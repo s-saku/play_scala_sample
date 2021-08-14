@@ -1,0 +1,12 @@
+@(message: String, form: Form[PersonForm], id: Int)(implicit request: MessagesRequestHeader)
+
+@main("Edit Person", "Edit", "copylight 2021") {
+  <p>@message</p>
+  @helper.form(action=routes.SlickController.update(id)) {
+    @helper.CSRF.formField
+    @helper.inputText(form("name"))
+    @helper.inputText(form("mail"))
+    @helper.inputText(form("tel"))
+    <input type="submit" value="Update Person"/>
+  }
+}

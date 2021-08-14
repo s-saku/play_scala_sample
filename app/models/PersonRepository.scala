@@ -26,14 +26,26 @@ class PersonRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   private val people = TableQuery[PeopleTable]
 
   def list(): Future[Seq[Person]] = db.run {
-    people.result
+    people.sortBy(_.name.asc).result
   }
 
-  def create(name: String, mail: String, tel: String): Future[Int] = db.run(
+  def create(name: String, mail: String, tel: String): Future[Int] = db.run {
     people += Person(0, name, mail, tel)
-  )
+  }
 
-  def get(id: Int): Future[Person] = db.run(
+  def get(id: Int): Future[Person] = db.run {
     people.filter(_.id === id).result.head
-  )
+  }
+
+  def update(id: Int, name: String, mail: String, tel: String): Future[Int] = db.run {
+    people.insertOrUpdate(Person(id, name, mail, tel))
+  }
+
+  def delete(id: Int): Future[Int] = db.run {
+    people.filter(_.id === id).delete
+  }
+
+  def find(s: String): Future[Seq[Person]] = db.run {
+    people.filter(_.name like "%" + s + "%").result
+  }
 }

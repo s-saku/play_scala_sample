@@ -1,0 +1,15 @@
+@(message: String, data: Person, id: Int)(implicit request: MessagesRequestHeader)
+
+@main("Delete person", "Delete", "copylight 2021") {
+  <p>@Html(message)</p>
+  <p>ID = @id</p>
+  <ul>
+    <li>NAME: @data.name</li>
+    <li>MAIL: @data.mail</li>
+    <li>TEL: @data.tel</li>
+  </ul>
+  @helper.form(action=routes.SlickController.remove(id)) {
+    @helper.CSRF.formField
+    <button>Delete Person</button>
+  }
+}

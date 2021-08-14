@@ -1,0 +1,18 @@
+@(message: String, form: Form[PersonFind], data:Seq[Person])(implicit request:MessagesRequestHeader)
+
+@main("Find People", "Find", "copylight 2021") {
+  <h1>@Html(message)</h1>
+  @helper.form(action=routes.SlickController.search()) {
+    @helper.CSRF.formField
+    @helper.inputText(form("query"))
+    <button>Find</button>
+  }
+  <hr>
+  <p>Result:</p>
+  
+  <ul>
+    @for(item<-data){
+      <li>@item.id: @item.name [@item.mail, @item.tel]</li>
+    }
+  </ul>
+}
